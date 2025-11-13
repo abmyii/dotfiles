@@ -5,9 +5,6 @@ local act = wezterm.action
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 
--- Spawn a bash shell in login mode
-config.default_prog = { '/bin/bash' }
-
 -- Prevent copying selection (https://github.com/wezterm/wezterm/discussions/3760)
 config.mouse_bindings = {
   {
@@ -54,5 +51,47 @@ function macCMDtoMeta()
 	return keymappings
 end
 
+local keys = {
+  -- Tabs
+  { key = "T", mods = "CTRL|SHIFT", action = act.SpawnTab "DefaultDomain" },
+  { key = "W", mods = "CTRL|SHIFT", action = act.CloseCurrentTab { confirm = true } },
+  { key = "Tab", mods = "CTRL", action = act.ActivateTabRelative(1) },
+  { key = "Tab", mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
+
+  -- New window
+  { key = "N", mods = "CTRL|SHIFT", action = act.SpawnWindow },
+
+  -- Pane management
+  { key = "D", mods = "CTRL|SHIFT", action = act.SplitHorizontal { domain = "CurrentPaneDomain" } },
+  { key = "E", mods = "CTRL|SHIFT", action = act.SplitVertical { domain = "CurrentPaneDomain" } },
+  { key = "Q", mods = "CTRL|SHIFT", action = act.CloseCurrentPane { confirm = true } },
+
+  -- Move between panes
+  { key = "LeftArrow", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection "Left" },
+  { key = "RightArrow", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection "Right" },
+  { key = "UpArrow", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection "Up" },
+  { key = "DownArrow", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection "Down" },
+
+  -- Resize panes
+  { key = "LeftArrow", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize { "Left", 3 } },
+  { key = "RightArrow", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize { "Right", 3 } },
+  { key = "UpArrow", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize { "Up", 3 } },
+  { key = "DownArrow", mods = "CTRL|ALT|SHIFT", action = act.AdjustPaneSize { "Down", 3 } },
+
+  -- Reload configuration
+  { key = "R", mods = "CTRL|SHIFT", action = act.ReloadConfiguration },
+
+  -- Zoom
+  { key = "Enter", mods = "CTRL|SHIFT", action = act.TogglePaneZoomState },
+
+  -- Copy & paste (use CMD+C/V for native copy/paste)
+  { key = "C", mods = "CTRL|SHIFT", action = act.CopyTo "Clipboard" },
+  { key = "V", mods = "CTRL|SHIFT", action = act.PasteFrom "Clipboard" },
+
+  -- Search
+  { key = "F", mods = "CTRL|SHIFT", action = act.Search("CurrentSelectionOrEmptyString") },
+}
+
 -- Finally, return the configuration to wezterm:
+config.keys = macCMDtoMeta()
 return config

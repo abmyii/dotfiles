@@ -10,7 +10,7 @@ config.mouse_bindings = {
   {
     event = { Up = { streak = 1, button = "Left" } },
     mods = "NONE",
-    action = wezterm.action.OpenLinkAtMouseCursor,
+    action = wezterm.action.Nop,
   },
   {
     event = { Up = { streak = 2, button = "Left" } },
